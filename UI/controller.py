@@ -12,7 +12,16 @@ class Controller:
         pass
 
     def handleAdiacenti(self,e):
-        pass
+        try: self._view._ddDirector.value
+        except: self._view.create_alert("Selezionare un regista")
+
+        ad = self._model.getAdiacenti(self._view._ddDirector.value)
+
+        for a in ad:
+            self._view.txt_result.controls.append(ft.Text(f"{a[0]} #attori condivisi: {a[1]}"))
+
+        self._view.update_page()
+
 
     def handleCreaGrafo(self, e):
         if self._view._ddanno.value:

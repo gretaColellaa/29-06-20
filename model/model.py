@@ -9,7 +9,7 @@ class Model:
         self._idMapDirectors = {}
         self._nodes = []
         self._edges = []
-        self._grafo = nx.DiGraph()
+        self._grafo = nx.Graph()
         self._mapPeso = {}
 
         self._mapAttori = {}
@@ -34,13 +34,11 @@ class Model:
 
         for a in self._attori:
             for n1 in self._nodes:
+                print(n1)
                 for n2 in self._nodes:
                         if n1!=n2 and a in self._mapAttori[n1] and a in self._mapAttori[n2]:
                             if (n1,n2) in self._mapPeso.keys():
                                 self._mapPeso[(n1,n2)]+=1
-                            elif  (n2,n1) in self._mapPeso.keys():
-                                self._mapPeso[(n2,n1)] += 1
-
                             else:
                                 self._mapPeso[(n1, n2)] = 1
 
@@ -57,4 +55,23 @@ class Model:
 
     def getNumEdges(self):
         return len(self._grafo.edges)
+
+    def getAdiacenti(self, nodo):
+        nodo = int(nodo)
+        ad_ordinati = []
+
+        for a in self._grafo.neighbors(nodo):
+            edge_data = self._grafo.get_edge_data(nodo, a)
+            if edge_data is None:
+                edge_data = self._grafo.get_edge_data(a, nodo)
+            if edge_data is not None and 'weight' in edge_data:
+                peso = int(edge_data['weight'])
+                ad_ordinati.append((a, peso))
+            else:
+                print(f"Attenzione: arco mancante o senza peso tra {nodo} e {a}")
+
+        return sorted(ad_ordinati, key=lambda x: x[1], reverse=True)
+
+
+
 
