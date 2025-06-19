@@ -72,6 +72,31 @@ class Model:
 
         return sorted(ad_ordinati, key=lambda x: x[1], reverse=True)
 
+    def cerca_cammino(self, partenza, c):
+        self._best_cammino = []
+        self._best_peso = 0
+        self._ricorsione([partenza], 0, {partenza}, c)
+        return self._best_cammino, self._best_peso
 
+    def _ricorsione(self, cammino_parziale, peso_parziale, visited, c):
+        ultimo = cammino_parziale[-1]
+
+        # Caso finale: aggiorna se questo cammino è migliore
+        if peso_parziale <= c:
+            self._best_peso = peso_parziale
+            self._best_cammino = list(cammino_parziale)
+
+        for vicino in self._grafo.neighbors(ultimo):
+            if vicino not in visited:
+                peso = self._grafo[ultimo][vicino]['weight']
+
+                visited.add(vicino)
+                cammino_parziale.append(vicino)
+
+                self._ricorsione(cammino_parziale, peso_parziale + peso, visited,c)
+
+                # Backtrack
+                visited.remove(vicino)
+                cammino_parziale.pop()
 
 

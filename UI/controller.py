@@ -9,7 +9,18 @@ class Controller:
         self._model = model
 
     def handleAffini(self,e):
-        pass
+        try : int(self._view._txtCondivisi.value)
+        except:  self._view.create_alert("inserire un numero intero")
+        cammino, peso = self._model.cerca_cammino(int(self._view._ddDirector.value), int(self._view._txtCondivisi.value))
+        self._view.txt_result.controls.append(ft.Text(f"Il gruppo più grande di {len(cammino)} registi a partire da"
+                                                      f"{int(self._view._ddDirector.value)} con un totale di {peso} attori "
+                                                      f"condivisi"))
+
+        for r in cammino:
+            self._view.txt_result.controls.append(ft.Text(f"{r}"))
+
+        self._view.update_page()
+
 
     def handleAdiacenti(self,e):
         try: self._view._ddDirector.value
